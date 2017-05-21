@@ -43,7 +43,7 @@ export class View {
 				<Button onClick = {this._controler.addDev.bind(this._controler)}
 						name = {'Add ' + this._typeDevObj[items[i]].type}
 						value = {items[i]}
-						style = {{width: 120, height: 20}}
+						style = {{width: 120}}
 						/>,
 				this.addDev[i]
 			);
@@ -57,7 +57,7 @@ export class View {
 		ReactDOM.render(
 			<Button onClick={this._controler.delDev.bind(this._controler)}
 					name='....Delete device....'
-					style = {{width: '100%', height: 20}}
+					style = {{width: '80%'}}
 					/>,
 			this.delDev
 		);
@@ -141,20 +141,20 @@ export class View {
 			let breakLine;
 			let label;
 			if (controls[ctrl].type === 'boolean') {
-				style = {width: 100, height: 20};
+				style = {width: 100};
 				value = ctrl;
 				label = controls[ctrl].name;
 				item.push({name:'on/off', value, onClick, breakLine:false, style, label})
 
 			} else if (controls[ctrl].type === 'list') {
-				style = {width: 50, height: 20};
+				style = {width: 50};
 				value = ctrl;
 				label = controls[ctrl].name;
 				item.push({name:'-', value, onClick, breakLine:true, style, label})
 				item.push({name:'+', value, onClick, breakLine:false, style, label})
 
 			} else if (controls[ctrl].type === 'range') {
-				style = {width: 50, height: 20};
+				style = {width: 50};
 				value = ctrl;
 				label = controls[ctrl].name;
 				item.push({name:'-', value, onClick, breakLine:true, style, label})

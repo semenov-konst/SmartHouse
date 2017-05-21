@@ -12,7 +12,7 @@ export class Rows extends React.Component { //Строкаи таблицы ус
 	}
 	render() {
 		return (
-			<td style = {{cellpadding: 10, border: '1px solid'}}>
+			<td style = {{}}>
 			<center><div id={this.state.item}>{this.state.text}</div></center>
 			</td>
 			);
@@ -28,13 +28,15 @@ export class Table extends React.Component { //Таблицы устройств
 	}
 	render() {
 		return (
-				<table style = {{cellpadding: 10, border: '1px solid', width: '100%'}}>
-				<tbody> 
+				<table  className = 'table table-striped' >
+				<thead>	
 				<tr>
 					{this.props.items.map(
 						(item, i) => <Rows key={i} item={item + '_add'} text='Кнопки добавления утройств'/>
 					)}
 				</tr>
+				</thead>
+				<tbody> 
 				<tr>
 					{this.props.items.map(
 						(item, i) =><Rows key={i}  item={item + '_name'} text='названия'/>
@@ -76,11 +78,12 @@ export class RadioButton extends React.Component { //Радиокнопка
 
 	render() {
 		return (
-			<span style={this.state.style}>
-				<input name={this.props.name} type='radio' onChange={this.onChange} value={this.state.value} checked={this.state.checked}></input>
-				<text>{this.state.label}</text>
-				<br />
-			</span>
+			<div className="radio">
+				<label style={this.state.style}>
+					<input name={this.props.name} type='radio' onChange={this.onChange} value={this.state.value} checked={this.state.checked}/>
+					{this.state.label}
+				</label>
+			</div>
 			);
 	}
 }
@@ -125,7 +128,7 @@ export class Button extends React.Component { //Кнопка
 	render() {
 		return (
 			<span>
-				<button type='button' onClick={this.onClick} value={this.state.value} style={this.state.style}>{this.state.name}</button>
+				<button type='button' className='btn btn-info' onClick={this.onClick} value={this.state.value} style={this.state.style}>{this.state.name}</button>
 				<text hidden={this.state.breakLine}>  {this.state.label}</text>
 				<div hidden={this.state.breakLine}> </div>
 			</span>
@@ -170,7 +173,7 @@ export class InfoTable extends React.Component { //Информационное 
 
 	render() {
 		return (
-				<textarea value = {this.state.text} rows="10" cols="25" disabled></textarea>
+				<textarea className='form-group' value = {this.state.text} rows="10" cols="25"  disabled></textarea>
 				);
 	}
 
