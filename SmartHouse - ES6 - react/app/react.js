@@ -114,9 +114,9 @@ export class Button extends React.Component { //Кнопка
 			onClick: this.props.onClick,
 			name: this.props.name,
 			value: this.props.value,
-			breakLine: this.props.breakLine,
 			style: this.props.style,
-			label: this.props.label
+			label: this.props.label,
+			icon: this.props.icon
 		};
 		//debugger;
 		this.onClick = this.onClick.bind(this);
@@ -126,33 +126,52 @@ export class Button extends React.Component { //Кнопка
 		this.state.onClick({value:this.state.value, name:this.state.name});
 	}
 	render() {
+		let buttonName = this.state.icon ? '' : this.state.name;
 		return (
-			<span>
-				<button type='button' className='btn btn-info' onClick={this.onClick} value={this.state.value} style={this.state.style}>{this.state.name}</button>
-				<text hidden={this.state.breakLine}>  {this.state.label}</text>
-				<div hidden={this.state.breakLine}> </div>
-			</span>
+				<button type='button'  className='btn btn-info' onClick={this.onClick} value={this.state.value} style={this.state.style}><span className = {this.state.icon}></span>{buttonName}</button>
 			);
 	}
 }
-Button.defaultProps = {breakLine: true};
+
 
 export class ControlList extends React.Component { //Список контроллеров устройств
 	render() {
 		//debugger;
+		//console.dir(this.props.items);
 		return (
 			<form>
 				{this.props.items.map(
-					({value, name, onClick, breakLine, style, label}, i) => <Button key = {i} 
-															value={value}
-															name={name}
-															onClick={onClick}
-															breakLine={breakLine}
-															style={style}
-															label={label}
-															/>
+					(item, i) => <ButtonGroup 
+										key = {i}
+										items = {item}
+									/>
 				)}
 			</form>
+			);
+	}	
+}
+
+class ButtonGroup extends React.Component { //Список контроллеров устройств
+	render() {
+		//console.dir(this.props.items);
+		//debugger;
+		return (
+			<div>
+				<div className='btn-group'>
+					{this.props.items.map(
+						({value, name, onClick, style, label, icon}, i) => <Button key = {i} 
+																	value={value}
+																	name={name}
+																	onClick={onClick}
+																	style={style}
+																	label={label}
+																	icon={icon}
+																	/>
+						)}				
+				</div>
+				 &nbsp; {this.props.items[0].label}
+				<br/>
+			</div>
 			);
 	}	
 }

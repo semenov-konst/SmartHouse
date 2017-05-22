@@ -6725,6 +6725,23 @@ var View = exports.View = function () {
 		this._controler;
 		this.addDev = [];
 		this.list = {};
+		this.icons = {
+			boolean: {
+				default: 'glyphicon glyphicon-off',
+				Mute: 'glyphicon glyphicon-volume-off',
+				'Black/White mode': 'glyphicon glyphicon-eye-close'
+			},
+			list: {
+				default: ['glyphicon glyphicon-chevron-down', 'glyphicon glyphicon-chevron-up']
+
+			},
+			range: {
+				default: ['glyphicon glyphicon-minus', 'glyphicon glyphicon-plus'],
+				Volume: ['glyphicon glyphicon-volume-down', 'glyphicon glyphicon-volume-up'],
+				Zoom: ['glyphicon glyphicon-zoom-out', 'glyphicon glyphicon-zoom-in']
+			}
+
+		};
 
 		this.info = document.getElementById('info');
 		this.control = document.getElementById('control');
@@ -6835,31 +6852,36 @@ var View = exports.View = function () {
 			for (var ctrl in controls) {
 				var style = void 0;
 				var name = void 0;
-				var value = void 0;
 				var onClick = this._controler.handler.bind(this._controler);
 				var breakLine = void 0;
-				var label = void 0;
+				var value = ctrl;
+				var label = controls[ctrl].name;
+				var icon = getIcon.call(this, controls[ctrl].type, label);;
 				if (controls[ctrl].type === 'boolean') {
 					style = { width: 100 };
-					value = ctrl;
-					label = controls[ctrl].name;
-					item.push({ name: 'on/off', value: value, onClick: onClick, breakLine: false, style: style, label: label });
+					item.push([{ name: 'on/off', value: value, onClick: onClick, breakLine: false, style: style, label: label, icon: icon }]);
 				} else if (controls[ctrl].type === 'list') {
 					style = { width: 50 };
-					value = ctrl;
-					label = controls[ctrl].name;
-					item.push({ name: '-', value: value, onClick: onClick, breakLine: true, style: style, label: label });
-					item.push({ name: '+', value: value, onClick: onClick, breakLine: false, style: style, label: label });
+					item.push([{ name: '-', value: value, onClick: onClick, breakLine: true, style: style, label: label, icon: icon[0] }, { name: '+', value: value, onClick: onClick, breakLine: false, style: style, label: label, icon: icon[1] }]);
 				} else if (controls[ctrl].type === 'range') {
 					style = { width: 50 };
-					value = ctrl;
-					label = controls[ctrl].name;
-					item.push({ name: '-', value: value, onClick: onClick, breakLine: true, style: style, label: label });
-					item.push({ name: '+', value: value, onClick: onClick, breakLine: false, style: style, label: label });
+					item.push([{ name: '-', value: value, onClick: onClick, breakLine: true, style: style, label: label, icon: icon[0] }, { name: '+', value: value, onClick: onClick, breakLine: false, style: style, label: label, icon: icon[1] }]);
 				}
 				//debugger;
 			}
 			_reactDom2.default.render(_react2.default.createElement(_react3.ControlList, { items: item }), div);
+
+			function getIcon(type, label) {
+				//debugger;
+				for (var key in this.icons) {
+					if (key == type) {
+						for (var _key in this.icons[type]) {
+							if (_key == label) return this.icons[type][label];
+						}
+					}
+				}
+				return this.icons[type].default;
+			}
 		}
 	}, {
 		key: "_setDiv",
@@ -10401,9 +10423,9 @@ var Button = exports.Button = function (_React$Component5) {
 			onClick: _this5.props.onClick,
 			name: _this5.props.name,
 			value: _this5.props.value,
-			breakLine: _this5.props.breakLine,
 			style: _this5.props.style,
-			label: _this5.props.label
+			label: _this5.props.label,
+			icon: _this5.props.icon
 		};
 		//debugger;
 		_this5.onClick = _this5.onClick.bind(_this5);
@@ -10418,33 +10440,18 @@ var Button = exports.Button = function (_React$Component5) {
 	}, {
 		key: "render",
 		value: function render() {
+			var buttonName = this.state.icon ? '' : this.state.name;
 			return _react2.default.createElement(
-				"span",
-				null,
-				_react2.default.createElement(
-					"button",
-					{ type: "button", className: "btn btn-info", onClick: this.onClick, value: this.state.value, style: this.state.style },
-					this.state.name
-				),
-				_react2.default.createElement(
-					"text",
-					{ hidden: this.state.breakLine },
-					"  ",
-					this.state.label
-				),
-				_react2.default.createElement(
-					"div",
-					{ hidden: this.state.breakLine },
-					" "
-				)
+				"button",
+				{ type: "button", className: "btn btn-info", onClick: this.onClick, value: this.state.value, style: this.state.style },
+				_react2.default.createElement("span", { className: this.state.icon }),
+				buttonName
 			);
 		}
 	}]);
 
 	return Button;
 }(_react2.default.Component);
-
-Button.defaultProps = { breakLine: true };
 
 var ControlList = exports.ControlList = function (_React$Component6) {
 	_inherits(ControlList, _React$Component6);
@@ -10460,23 +10467,14 @@ var ControlList = exports.ControlList = function (_React$Component6) {
 		//Список контроллеров устройств
 		value: function render() {
 			//debugger;
+			//console.dir(this.props.items);
 			return _react2.default.createElement(
 				"form",
 				null,
-				this.props.items.map(function (_ref2, i) {
-					var value = _ref2.value,
-					    name = _ref2.name,
-					    onClick = _ref2.onClick,
-					    breakLine = _ref2.breakLine,
-					    style = _ref2.style,
-					    label = _ref2.label;
-					return _react2.default.createElement(Button, { key: i,
-						value: value,
-						name: name,
-						onClick: onClick,
-						breakLine: breakLine,
-						style: style,
-						label: label
+				this.props.items.map(function (item, i) {
+					return _react2.default.createElement(ButtonGroup, {
+						key: i,
+						items: item
 					});
 				})
 			);
@@ -10486,20 +10484,68 @@ var ControlList = exports.ControlList = function (_React$Component6) {
 	return ControlList;
 }(_react2.default.Component);
 
-var InfoTable = exports.InfoTable = function (_React$Component7) {
-	_inherits(InfoTable, _React$Component7);
+var ButtonGroup = function (_React$Component7) {
+	_inherits(ButtonGroup, _React$Component7);
+
+	function ButtonGroup() {
+		_classCallCheck(this, ButtonGroup);
+
+		return _possibleConstructorReturn(this, (ButtonGroup.__proto__ || Object.getPrototypeOf(ButtonGroup)).apply(this, arguments));
+	}
+
+	_createClass(ButtonGroup, [{
+		key: "render",
+		//Список контроллеров устройств
+		value: function render() {
+			//console.dir(this.props.items);
+			//debugger;
+			return _react2.default.createElement(
+				"div",
+				null,
+				_react2.default.createElement(
+					"div",
+					{ className: "btn-group" },
+					this.props.items.map(function (_ref2, i) {
+						var value = _ref2.value,
+						    name = _ref2.name,
+						    onClick = _ref2.onClick,
+						    style = _ref2.style,
+						    label = _ref2.label,
+						    icon = _ref2.icon;
+						return _react2.default.createElement(Button, { key: i,
+							value: value,
+							name: name,
+							onClick: onClick,
+							style: style,
+							label: label,
+							icon: icon
+						});
+					})
+				),
+				"\xA0 ",
+				this.props.items[0].label,
+				_react2.default.createElement("br", null)
+			);
+		}
+	}]);
+
+	return ButtonGroup;
+}(_react2.default.Component);
+
+var InfoTable = exports.InfoTable = function (_React$Component8) {
+	_inherits(InfoTable, _React$Component8);
 
 	//Информационное табло 
 	function InfoTable(props) {
 		_classCallCheck(this, InfoTable);
 
-		var _this7 = _possibleConstructorReturn(this, (InfoTable.__proto__ || Object.getPrototypeOf(InfoTable)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (InfoTable.__proto__ || Object.getPrototypeOf(InfoTable)).call(this, props));
 
-		_this7.state = {
-			text: _this7.props.text
+		_this8.state = {
+			text: _this8.props.text
 		};
 		//debugger;
-		return _this7;
+		return _this8;
 	}
 
 	_createClass(InfoTable, [{

@@ -17,17 +17,26 @@
 </head>
 
 <body>
-		<div id='table'> </div>
-		<center> <div id='delDev'></div></center>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1" id='table'></div>
+			<div class="col-md-10 col-md-offset-1" id='table'>
+				<div id='delDev' align="center"></div>
+			</div>
+		</div>
 		</br>
-		<table width="80%" align="center">
-		<col col width="50%">
-		<col col width="50%">
-			<tr>
-				<td valign='top'> <div id='control'> </div> </td>
-				<td valign='top'> <center> <div id='info'></div> </center> </td>
-			</tr>
-	 	</table>		
+		<div class="row">
+			<div class="col-md-4 col-md-offset-2">
+				<div id='control'></div>
+			</div>
+			<div class="col-md-5 col-md-offset-1">
+				<div id='info'></div>
+			</div>
+		</div>
+	</div>
+	
+
 	<script src="bundle.js"> </script>
 
 </body>

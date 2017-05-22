@@ -21,6 +21,23 @@ export class View {
 		this._controler;
 		this.addDev = [];
 		this.list = {};
+		this.icons = {
+						boolean: {
+							default: 'glyphicon glyphicon-off',
+							Mute: 'glyphicon glyphicon-volume-off',
+							'Black/White mode': 'glyphicon glyphicon-eye-close'
+						},
+						list: {
+							default: ['glyphicon glyphicon-chevron-down', 'glyphicon glyphicon-chevron-up']
+
+						},
+						range: {
+							default: ['glyphicon glyphicon-minus', 'glyphicon glyphicon-plus'],
+							Volume: ['glyphicon glyphicon-volume-down', 'glyphicon glyphicon-volume-up'],
+							Zoom: ['glyphicon glyphicon-zoom-out', 'glyphicon glyphicon-zoom-in']
+						}
+
+		};
 
 		this.info = document.getElementById('info');
 		this.control = document.getElementById('control');
@@ -135,31 +152,31 @@ export class View {
 		let i = 0;
 		for (let ctrl in controls) {				
 			let style;
-			let name;
-			let value;		
+			let name;		
 			let onClick = this._controler.handler.bind(this._controler);
 			let breakLine;
-			let label;
+			let value = ctrl;
+			let label = controls[ctrl].name;
+			let icon = getIcon.call(this, controls[ctrl].type, label);;
 			if (controls[ctrl].type === 'boolean') {
 				style = {width: 100};
-				value = ctrl;
-				label = controls[ctrl].name;
-				item.push({name:'on/off', value, onClick, breakLine:false, style, label})
+				item.push([
+					{name:'on/off', value, onClick, breakLine:false, style, label, icon}
+					]);
 
 			} else if (controls[ctrl].type === 'list') {
 				style = {width: 50};
-				value = ctrl;
-				label = controls[ctrl].name;
-				item.push({name:'-', value, onClick, breakLine:true, style, label})
-				item.push({name:'+', value, onClick, breakLine:false, style, label})
+				item.push([
+					{name:'-', value, onClick, breakLine:true, style, label, icon: icon[0]},
+					{name:'+', value, onClick, breakLine:false, style, label, icon: icon[1]}
+					]);
 
 			} else if (controls[ctrl].type === 'range') {
 				style = {width: 50};
-				value = ctrl;
-				label = controls[ctrl].name;
-				item.push({name:'-', value, onClick, breakLine:true, style, label})
-				item.push({name:'+', value, onClick, breakLine:false, style, label})
-
+				item.push([
+					{name:'-', value, onClick, breakLine:true, style, label, icon: icon[0]},
+					{name:'+', value, onClick, breakLine:false, style, label, icon: icon[1]}
+					]);
 				
 			}
 			//debugger;
@@ -168,7 +185,18 @@ export class View {
 					<ControlList items = {item}/>,
 					div
 					);
-		
+
+		function getIcon(type, label) {
+			//debugger;
+			for (let key in this.icons) {
+				if (key == type) {
+					for (let key in this.icons[type]) {
+						if (key == label) return this.icons[type][label];
+					}
+				}
+			}
+			return this.icons[type].default;
+		}
 	}
 	_setDiv() {
 		this.addDev = [];
